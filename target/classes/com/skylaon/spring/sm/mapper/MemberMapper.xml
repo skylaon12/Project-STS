@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.skylaon.spring.sm.mapper.MemberMapper">
+	<select id="login" resultType="com.skylaon.spring.sm.vo.MemberVO">
+		SELECT * FROM SL_MEMBER	WHERE U_ID = #{u_id} AND U_PW = #{u_pw}
+	</select>
+	
+	<insert id="register">
+		INSERT INTO SL_MEMBER(U_ID, U_PW, U_NAME, U_AGE, U_GENDER)
+		VALUES (#{u_id}, #{u_pw}, #{u_name}, #{u_age}, #{u_gender})
+	</insert>	
+	
+</mapper>
+	
