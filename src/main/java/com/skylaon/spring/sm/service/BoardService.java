@@ -5,13 +5,19 @@ import java.util.ArrayList;
 import com.skylaon.spring.sm.vo.BoardVO;
 
 public interface BoardService {
-	public ArrayList<BoardVO> getList(String category);	// 리스트
+	public ArrayList<BoardVO> getList(String category, int index);
 	public BoardVO read(int bno);	// read
 	public void del(int bno); 		// delete
 	public void write(BoardVO bvo);	// write
 	public void modify(BoardVO bvo);// update
 	
-	public int getPostCount();
 	
-	//public BoardListProcessor list(String currentPage);
+	// 페이징 관련
+	public int getStartIndex(int page);
+	public int getTotalCount(String category);
+	public int getTotalPage(String category);
+	public int getTotalBlock(int totalPage);
+	
+
+	
 }

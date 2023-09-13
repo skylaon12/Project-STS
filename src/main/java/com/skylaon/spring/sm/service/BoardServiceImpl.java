@@ -5,25 +5,26 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skylaon.spring.sm.board.ConfigBoard;
 import com.skylaon.spring.sm.mapper.BoardMapper;
 import com.skylaon.spring.sm.vo.BoardVO;
+import com.skylaon.spring.sm.vo.ExamVO;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
 @Service
-public class BoardServiceImpl implements BoardService{
-	
+public class BoardServiceImpl implements BoardService {
+
 	@Setter(onMethod_ = @Autowired)
 	private BoardMapper mapper;
-	
+
 	// 리스트
 	@Override
-	public ArrayList<BoardVO> getList(String category) {
-		log.info("비지니스 계층===========");
-		//int limitIndex = (currentPage-1) * 5;
-		return mapper.getList(category);
+	public ArrayList<BoardVO> getList(String category, int index) {
+		ExamVO evo = new ExamVO(category, index);
+		return mapper.getList(evo);
 	}
 
 	// 읽기
@@ -51,25 +52,41 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-	public int getPostCount() {
-		return mapper.getPostCount();
+	public int getStartIndex(int page) {
+		int index = (page - 1) * ConfigBoard.AMOUNT_PER_PAGE;
+		return index;
 	}
 
-//	@Override
-//	public BoardListProcessor list(String currentPage){
-//		log.info("서비스에서 호출");
-//		if(currentPage == null) {
-//			currentPage = "1";
-//		}
-//		BoardListProcessor blp;
-//		try {
-//			blp = new BoardListProcessor(mapper, currentPage);
-//			return blp;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
+	@Override
+	public int getTotalCount(String category) {
+		return mapper.getTotalCount(category);
+	}
 
+	@Override
+	public int getTotalPage(String category) {
+		// 전체 페이지 수 = 전체 글 수 / [페이지당 글 수]
+		int totalCount = getTotalCount(category);
+		int totalPage = 0;
+		if (totalCount % ConfigBoard.AMOUNT_PER_PAGE == 0) {
+			totalPage = totalCount / ConfigBoard.AMOUNT_PER_PAGE;
+		} else {
+			totalPage = totalCount / ConfigBoard.AMOUNT_PER_PAGE + 1;
+		}
+		return totalPage;
+	}
+
+	@Override
+	public int getTotalBlock(int totalPage) {
+		// 전체 블럭 수 = 전체 페이지 수 / [블럭당 페이지 수]
+		int totalBlock = 0;
+		if (totalPage % ConfigBoard.PAGE_PER_BLOCK == 0) {
+			totalBlock = totalPage / ConfigBoard.PAGE_PER_BLOCK;
+		} else {
+			totalBlock = totalPage / ConfigBoard.PAGE_PER_BLOCK + 1;
+		}
+		return totalBlock;
+	}
+
+	
 
 }

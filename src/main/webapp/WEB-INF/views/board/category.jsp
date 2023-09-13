@@ -11,7 +11,7 @@
 <body>
 	<fieldset>
 		<legend>일반</legend>
-		<a href="${cp}/board/getList?category=free">자유게시판</a>
+		<a href="${cp}/board/getList?category=free&page=1">자유게시판</a>
 		<hr>
 		<a href="${cp}/board/getList?category=notice">공지게시판</a>
 		<hr>

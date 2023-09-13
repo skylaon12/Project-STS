@@ -1,4 +1,3 @@
-<%@page import="com.skylaon.jsp.BoardListProcessor"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.skylaon.spring.sm.vo.BoardVO"%>
 <%@page import="java.util.List"%>
@@ -15,8 +14,14 @@
 <title>Insert title here</title>
 <link rel="stylesheet"
 	href="../resources/css/list.css?ver=<%=System.currentTimeMillis()%>">
+<link rel="stylesheet"
+	href="../resources/css/page.css?ver=<%=System.currentTimeMillis()%>">
 </head>
 <body>
+<%
+	Object o = request.getAttribute("list");
+	ArrayList<BoardVO> list = (ArrayList<BoardVO>)o;
+%>
 	<section class="notice">
 		<div class="page-title">
 			<div class="container">
@@ -76,21 +81,25 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="guest" items="${list}">
-							<c:set var="no" value="${guest.b_no}" />
-							<c:set var="title" value="${guest.b_title}" />
-							<c:set var="hit" value="${guest.b_hit}" />
-							<c:set var="id" value="${guest.b_id}" />
-							<c:set var="datetime" value="${guest.b_datetime}" />
-							<c:set var="category" value="${guest.b_category}" />
-							<tr>
-								<td>${no}</td>
-								<th><a href="${cp}/board/read?category=${category}&no=${no}">${title}</a>
+						<%
+						for(int i = 0; i < list.size(); i++){
+							int b_no = list.get(i).getB_no();
+							String b_title = list.get(i).getB_title();
+							String b_id = list.get(i).getB_id();
+							int b_hit = list.get(i).getB_hit();
+							String b_datetime = list.get(i).getB_datetime();
+							String b_category = list.get(i).getB_category();
+						%>
+						<tr>
+							<td><%=b_no%></td>
+							<th><a href="${cp}/board/read?category=<%=b_category%>&no=<%=b_no%>}"><%=b_title%></a>
 								</th>
-								<td>${hit}</td>
-								<td>${id}</td>
-								<td>${datetime}</td>
-						</c:forEach>
+								<td><%=b_hit%></td>
+								<td><%=b_id%></td>
+								<td><%=b_datetime %></td>
+						<%
+						}
+						%>
 					</tbody>
 				</table>
 			</div>
@@ -101,7 +110,19 @@
 						class="btn btn-dark">게시물 작성</button></a>
 			</div>
 		</div>
-
+		<div class="page_wrap">
+			<div class="page_nation">
+				<c:if test="${hasPrev == true}" >
+					[<a class="arrow prev" href="${cp}/board/getList?category=${category}&page=${prevPage}"><img src="../resources/img/board/page_prev.png" alt="이전"></a>]
+				</c:if>
+				<c:forEach var="p" begin="${blockStartNo}" end="${blockEndNo}">
+					[<a href="${cp}/board/getList?category=${category}&page=${p}">${p}</a>]
+				</c:forEach>
+				<c:if test="${hasNext == true}" >
+					[<a class="arrow next" href="${cp}/board/getList?category=${category}&page=${nextPage}"><img src="../resources/img/board/page_next.png" alt="다음"></a>]
+				</c:if>
+			</div>
+		</div>
 	</section>
 </body>
 </html>
