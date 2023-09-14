@@ -10,12 +10,14 @@ public interface BoardService {
 	public void del(int bno); 		// delete
 	public void write(BoardVO bvo);	// write
 	public void modify(BoardVO bvo);// update
-	
+	public ArrayList<BoardVO> getSearchList(String word, String category, int index);
 	
 	// 페이징 관련
 	public int getStartIndex(int page);
 	public int getTotalCount(String category);
+	public int getTotalCount(String word, String category);
 	public int getTotalPage(String category);
+	public int getTotalPage(int totalCount, String word, String category);
 	public int getTotalBlock(int totalPage);
 	
 

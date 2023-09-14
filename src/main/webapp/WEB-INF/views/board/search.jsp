@@ -58,7 +58,8 @@
 						<div class="search-wrap">
 							<label for="search" class="blind">공지사항 내용 검색</label>
 							<input type="hidden" name="category" value="${category}">
-							<input name="word" type="search" placeholder="검색어를 입력해주세요." value="">
+							<input name="word" type="search" placeholder="검색어를 입력해주세요."
+								value="">
 							<button type="submit" class="btn btn-dark">검색</button>
 						</div>
 					</form>
@@ -112,13 +113,13 @@
 		<div class="page_wrap">
 			<div class="page_nation">
 				<c:if test="${hasPrev == true}" >
-					[<a class="arrow prev" href="${cp}/board/getList?category=${category}&page=${prevPage}"><img src="../resources/img/board/page_prev.png" alt="이전"></a>]
+					[<a class="arrow prev" href="${cp}/board/search?category=${category}&word=${word}&page=${prevPage}"><img src="../resources/img/board/page_prev.png" alt="이전"></a>]
 				</c:if>
 				<c:forEach var="p" begin="${blockStartNo}" end="${blockEndNo}">
-					[<a href="${cp}/board/getList?category=${category}&page=${p}">${p}</a>]
+					[<a href="${cp}/board/search?category=${category}&word=${word}&page=${p}">${p}</a>]
 				</c:forEach>
 				<c:if test="${hasNext == true}" >
-					[<a class="arrow next" href="${cp}/board/getList?category=${category}&page=${nextPage}"><img src="../resources/img/board/page_next.png" alt="다음"></a>]
+					[<a class="arrow next" href="${cp}/board/search?category=${category}&word=${word}&page=${nextPage}"><img src="../resources/img/board/page_next.png" alt="다음"></a>]
 				</c:if>
 			</div>
 		</div>

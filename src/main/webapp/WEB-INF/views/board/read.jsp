@@ -85,7 +85,22 @@
 			<a href="${cp}/board/getList?category=${category}">돌아가기</a>
 
 		</div>
-
+		<!-- 댓글 창 -->
+		<div class="comment-section">
+		    <h4>댓글</h4>
+		    <div class="cmt_list">
+		        <!-- 댓글 목록이 여기에 표시됩니다. -->
+		        <!-- 댓글 목록 예시 -->
+		        <div class="comment-item">
+		            <p>댓글 내용 예시</p>
+		            <span class="comment-author">작성자: 홍길동</span>
+		        </div>
+		    </div>
+		    <form id="comment-form" class="comment-form">
+		        <textarea id="comment-text" placeholder="댓글을 입력하세요..." rows="4"></textarea>
+		        <button type="submit" class="btn btn-primary">댓글 등록</button>
+		    </form>
+		</div>
 	</section>
 
 

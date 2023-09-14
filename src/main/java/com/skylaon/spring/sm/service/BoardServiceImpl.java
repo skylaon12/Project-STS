@@ -23,10 +23,16 @@ public class BoardServiceImpl implements BoardService {
 	// 리스트
 	@Override
 	public ArrayList<BoardVO> getList(String category, int index) {
-		ExamVO evo = new ExamVO(category, index);
-		return mapper.getList(evo);
+		return mapper.getList(category, index);
 	}
-
+	
+	// 검색
+	@Override
+	public ArrayList<BoardVO> getSearchList(String word, String category, int index) {
+		return mapper.getSearchList(word, category, index);
+		
+	}
+	
 	// 읽기
 	@Override
 	public BoardVO read(int bno) {
@@ -61,11 +67,27 @@ public class BoardServiceImpl implements BoardService {
 	public int getTotalCount(String category) {
 		return mapper.getTotalCount(category);
 	}
+	@Override
+	public int getTotalCount(String word, String category) {
+		//ExamVO evo = new ExamVO(word, category);
+		return mapper.getSearchTotalCount(word, category);
+	}
 
 	@Override
 	public int getTotalPage(String category) {
 		// 전체 페이지 수 = 전체 글 수 / [페이지당 글 수]
 		int totalCount = getTotalCount(category);
+		int totalPage = 0;
+		if (totalCount % ConfigBoard.AMOUNT_PER_PAGE == 0) {
+			totalPage = totalCount / ConfigBoard.AMOUNT_PER_PAGE;
+		} else {
+			totalPage = totalCount / ConfigBoard.AMOUNT_PER_PAGE + 1;
+		}
+		return totalPage;
+	}
+	@Override
+	public int getTotalPage(int totalCount, String word, String category) {
+		// 전체 페이지 수 = 전체 글 수 / [페이지당 글 수]
 		int totalPage = 0;
 		if (totalCount % ConfigBoard.AMOUNT_PER_PAGE == 0) {
 			totalPage = totalCount / ConfigBoard.AMOUNT_PER_PAGE;
@@ -86,6 +108,8 @@ public class BoardServiceImpl implements BoardService {
 		}
 		return totalBlock;
 	}
+
+	
 
 	
 

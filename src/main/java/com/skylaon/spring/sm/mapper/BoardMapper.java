@@ -2,12 +2,13 @@ package com.skylaon.spring.sm.mapper;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.skylaon.spring.sm.vo.BoardVO;
-import com.skylaon.spring.sm.vo.ExamVO;
 
 public interface BoardMapper {
 	//  리스트
-	public ArrayList<BoardVO> getList(ExamVO evo);
+	public ArrayList<BoardVO> getList(@Param("b_category") String b_category, @Param("index") int index);
 	
 	// read
 	public BoardVO read(int b_no);
@@ -21,6 +22,11 @@ public interface BoardMapper {
 	// modify
 	public void modify(BoardVO gvo);
 	
+	//search
+	public ArrayList<BoardVO> getSearchList(@Param("word")String word, @Param("b_category") String b_category, @Param("index") int index);
+	
 	public int getTotalCount(String b_category);
+	public int getSearchTotalCount(@Param("word")String word, @Param("b_category") String b_category);
+	
 	
 }

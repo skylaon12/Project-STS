@@ -4,26 +4,45 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.skylaon.spring.sm.mapper.BoardMapper">
 	<select id="getList" resultType="com.skylaon.spring.sm.vo.BoardVO">
-		SELECT * FROM SL_BOARD_FREE WHERE B_TITLE != '' AND B_CATEGORY = #{b_category} ORDER BY B_NO DESC LIMIT #{index}, 5
+		SELECT * FROM SL_BOARD_FREE 
+		WHERE B_TITLE != '' AND B_CATEGORY = #{b_category} 
+		ORDER BY B_NO DESC LIMIT #{index}, 5
+	</select>
+	
+	<select id="getSearchList" resultType="com.skylaon.spring.sm.vo.BoardVO">
+		SELECT * FROM SL_BOARD_FREE 
+		WHERE B_TITLE LIKE CONCAT('%', #{word}, '%') AND B_CATEGORY = #{b_category} 
+		ORDER BY B_NO DESC LIMIT #{index}, 5
 	</select>
 	
 	<select id="read" resultType="com.skylaon.spring.sm.vo.BoardVO">
-		SELECT * FROM SL_BOARD_FREE WHERE B_NO = #{b_no}
+		SELECT * FROM SL_BOARD_FREE 
+		WHERE B_NO = #{b_no}
 	</select>
 	
 	<delete id="del">
-		DELETE FROM SL_BOARD_FREE WHERE B_NO = #{b_no}
+		DELETE FROM SL_BOARD_FREE 
+		WHERE B_NO = #{b_no}
 	</delete>
 	
 	<insert id="write">
-		INSERT INTO SL_BOARD_FREE (B_CATEGORY, B_TITLE, B_ID, B_TEXT) VALUES (#{b_category}, #{b_title},#{b_id},#{b_text})
+		INSERT INTO SL_BOARD_FREE (B_CATEGORY, B_TITLE, B_ID, B_TEXT) 
+		VALUES (#{b_category}, #{b_title},#{b_id},#{b_text})
 	</insert>
 	
 	<update id="modify">
-		UPDATE SL_BOARD_FREE SET B_TITLE = #{b_title}, B_TEXT = #{b_text} WHERE B_NO = #{b_no}
+		UPDATE SL_BOARD_FREE SET B_TITLE = #{b_title}, B_TEXT = #{b_text} 
+		WHERE B_NO = #{b_no}
 	</update>
 	
 	<select id="getTotalCount" resultType="int">
-		SELECT COUNT(*) FROM SL_BOARD_FREE WHERE B_TITLE != '' AND B_CATEGORY = #{b_category}
+		SELECT COUNT(*) FROM SL_BOARD_FREE 
+		WHERE B_TITLE != '' AND B_CATEGORY = #{b_category}
 	</select>
+	<select id="getSearchTotalCount" resultType="int">
+		SELECT COUNT(*) FROM SL_BOARD_FREE 
+		WHERE B_TITLE LIKE CONCAT('%', #{word}, '%') AND B_CATEGORY = #{b_category}
+	</select>
+	
+	
 </mapper>

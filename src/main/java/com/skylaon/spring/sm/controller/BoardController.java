@@ -32,7 +32,7 @@ public class BoardController {
 	}
 
 	@GetMapping("/getList")
-	public void getBlpList(@RequestParam(value = "page", defaultValue = "1") int page,
+	public void getList(@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam("category") String category, Model model) {
 
 		// 넘어온 페이지 값으로 시작 인덱스 구하기
@@ -72,6 +72,8 @@ public class BoardController {
 		// 🐿️🐿️🐿️{블럭 처리 - 4/9}.블럭 페이지 끝 번호 구하기🐿️🐿️🐿️//
 		// 블럭 페이지 끝 번호 = 현재 블럭 번호 * 블럭 당 페이지 수
 		int blockEndNo = currentBlock * ConfigBoard.PAGE_PER_BLOCK;
+		if (blockEndNo > totalPage)
+			blockEndNo = totalPage;
 		log.info("==== 방명록 - 현재 블럭 시작 번호 : " + blockStartNo);
 		log.info("==== 방명록 - 현재 블럭 끝 번호 : " + blockEndNo);
 
@@ -117,8 +119,72 @@ public class BoardController {
 		model.addAttribute("list", service.getList(category, index));
 	}
 
-	@GetMapping({ "/read", "/modify" })
+	@GetMapping("/search")
+	public void getSearchList(@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam("category") String category, @RequestParam("word") String word, Model model) {
+
+		int index = service.getStartIndex(page);
+		int totalCount = service.getTotalCount(word, category);
+		log.info("==== 방명록 - 전체 글 수 : " + totalCount);
+		int totalPage = service.getTotalPage(totalCount, word, category);
+		log.info("==== 방명록 - 전체 페이지 수 : " + totalPage);
+
+		int totalBlock = service.getTotalBlock(totalPage);
+		log.info("==== 방명록 - 전체 블럭 수 : " + totalPage);
+
+		int currentBlock = (int) Math.ceil((double) page / ConfigBoard.PAGE_PER_BLOCK);
+		log.info("==== 방명록 - 현재 블럭 번호 : " + currentBlock);
+
+		int blockStartNo = (currentBlock - 1) * ConfigBoard.PAGE_PER_BLOCK + 1;
+		int blockEndNo = currentBlock * ConfigBoard.PAGE_PER_BLOCK;
+		if (blockEndNo > totalPage)
+			blockEndNo = totalPage;
+		log.info("==== 방명록 - 현재 블럭 시작 번호 : " + blockStartNo);
+		log.info("==== 방명록 - 현재 블럭 끝 번호 : " + blockEndNo);
+
+		boolean hasPrev = true; // 이전 블럭 가기 가능 여부 저장값 초기화.
+		boolean hasNext = true; // 다음 블럭 가기 가능 여부 저장값 초기화.
+		int prevPage = 0;
+		int nextPage = 0;
+
+		if (currentBlock == 1) { // 현재 블럭이 1번 블럭이면
+			hasPrev = false; // 이전 블럭 가기 불가능
+		} else { // 현재 블럭이 1번 블럭이 아니면
+			hasPrev = true; // 이전 블럭 가기 가능
+			prevPage = (currentBlock - 1) * ConfigBoard.PAGE_PER_BLOCK;
+		}
+		if (currentBlock < totalBlock) { // 현재 블럭이 마지막 블럭보다 작으면
+			hasNext = true; // 다음 블럭 가기 가능
+			nextPage = currentBlock * ConfigBoard.PAGE_PER_BLOCK + 1;
+		} else { // 현재 블럭이 마지막 블럭보다 같거나 크면(큰값이 오면 안되겠지만)
+			hasNext = false; // 다음 블럭 가기 불가능
+		}
+
+		// 페이지 리스트 뿌리기
+		model.addAttribute("category", category);
+		model.addAttribute("word", word);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("totalBlock", totalBlock);
+		model.addAttribute("currentBlock", currentBlock);
+		model.addAttribute("blockStartNo", blockStartNo);
+		model.addAttribute("blockEndNo", blockEndNo);
+		model.addAttribute("hasPrev", hasPrev);
+		model.addAttribute("hasNext", hasNext);
+		model.addAttribute("prevPage", prevPage);
+		model.addAttribute("nextPage", nextPage);
+		model.addAttribute("list", service.getSearchList(word, category, index));
+	}
+	
+	@GetMapping("/read")
 	public void read(@RequestParam("no") int bno, @RequestParam("category") String category, Model model) {
+		log.info("컨트롤러 ==== 글번호 ===============" + bno);
+		model.addAttribute("category", category);
+		model.addAttribute("read", service.read(bno));
+	}
+	
+	@GetMapping("/modify")
+	public void modify(@RequestParam("no") int bno, @RequestParam("category") String category, Model model) {
 		log.info("컨트롤러 ==== 글번호 ===============" + bno);
 		model.addAttribute("category", category);
 		model.addAttribute("read", service.read(bno));
