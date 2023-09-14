@@ -266,13 +266,6 @@ textarea{
 	width: 100%;
 }
 /* 댓글 스타일 */
-.comment-section {
-    margin-top: 40px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-}
-
 .cmt_list {
     margin-top: 20px;
 }

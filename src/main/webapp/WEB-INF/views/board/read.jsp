@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <link rel="stylesheet" href="../resources/css/list.css?ver=<%=System.currentTimeMillis()%>">
 </head>
 <body>
@@ -76,33 +77,45 @@
 			</table>
 			<c:if test="${user != null}">
 				<c:if test="${read.b_id eq user.u_id}">
-					<a href="${cp}/board/modify?no=${read.b_no}&category=${read.b_category}">수정하기</a>
+					<a href="${cp}/board/modify?no=${read.b_no}&category=${read.b_category}"><button
+						class="btn btn-dark">수정하기</button></a>
 					<br>
-					<a href="${cp}/board/del?no=${read.b_no}&category=${read.b_category}">삭제하기</a>
+					<a href="${cp}/board/del?no=${read.b_no}&category=${read.b_category}"><button
+						class="btn btn-dark">삭제하기</button></a>
 					<br>
 				</c:if>
 			</c:if>
-			<a href="${cp}/board/getList?category=${category}">돌아가기</a>
+			<a href="${cp}/board/getList?category=${category}"><button
+						class="btn btn-dark">돌아가기</button></a>
 
 		</div>
 		<!-- 댓글 창 -->
-		<div class="comment-section">
-		    <h4>댓글</h4>
+		<div class="container">
+		    <h4>댓글[${read.b_reply_count}]</h4>
 		    <div class="cmt_list">
 		        <!-- 댓글 목록이 여기에 표시됩니다. -->
 		        <!-- 댓글 목록 예시 -->
-		        <div class="comment-item">
-		            <p>댓글 내용 예시</p>
-		            <span class="comment-author">작성자: 홍길동</span>
-		        </div>
+		       	<c:forEach var="com" items="${comment}">
+		        	<div class="comment-item">
+		        		<p class="comment-content">댓글내용: ${com.b_text}</p>
+        				<span class="comment-author">작성자: ${com.b_id}</span><br>
+        				<span class="comment-date">작성일자: ${com.b_datetime}</span>
+        				<c:if test="${user.u_id eq com.b_id}">
+        					<a href="${cp}/board/delComment?category=${category}&no=${com.b_no}&ori=${read.b_no}">삭제하기</a>
+        				</c:if>
+	        		</div>
+		       	</c:forEach>
 		    </div>
 		    <form id="comment-form" class="comment-form">
-		        <textarea id="comment-text" placeholder="댓글을 입력하세요..." rows="4"></textarea>
-		        <button type="submit" class="btn btn-primary">댓글 등록</button>
+		    	<input type="hidden" id= "b_category" value="${read.b_category}"/>
+		    	<input type="hidden" id="u_id" value="${user.u_id}"/>
+		    	<input type="hidden" id="b_ori_id" value="${read.b_no}"/>
+		        <textarea id="comment" placeholder="댓글을 입력하세요..." rows="4"></textarea>
+		        <button type="button" onclick="submitComment()" class="btn btn-dark">댓글 등록</button>
 		    </form>
 		</div>
 	</section>
 
-
+<script src="../resources/js/commentRegister.js"></script>
 </body>
 </html>

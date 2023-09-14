@@ -1,6 +1,7 @@
 package com.skylaon.spring.sm.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.skylaon.spring.sm.vo.BoardVO;
 
@@ -20,6 +21,10 @@ public interface BoardService {
 	public int getTotalPage(int totalCount, String word, String category);
 	public int getTotalBlock(int totalPage);
 	
+	// 댓글
+	public List<BoardVO> getComment(int bno); 
+	public boolean setComment(BoardVO gvo);
+	public void del(int bno, int ori_no); 		// delete
 
 	
 }

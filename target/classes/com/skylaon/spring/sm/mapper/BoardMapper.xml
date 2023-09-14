@@ -35,6 +35,13 @@
 		WHERE B_NO = #{b_no}
 	</update>
 	
+	<!-- 읽을 때마다 조회수 증가 -->
+	<update id="hitCountPlus">
+		UPDATE SL_BOARD_FREE SET B_HIT = B_HIT + 1
+		WHERE B_NO = #{b_no}
+	</update>
+	
+	<!-- 페이징관련 -->
 	<select id="getTotalCount" resultType="int">
 		SELECT COUNT(*) FROM SL_BOARD_FREE 
 		WHERE B_TITLE != '' AND B_CATEGORY = #{b_category}
@@ -43,6 +50,28 @@
 		SELECT COUNT(*) FROM SL_BOARD_FREE 
 		WHERE B_TITLE LIKE CONCAT('%', #{word}, '%') AND B_CATEGORY = #{b_category}
 	</select>
+	<!-- 페이징관련 -->
 	
+	<!-- 댓글 관련 -->
+	<!-- 댓글 목록 가져오기 -->
+	<select id="getComment" resultType="com.skylaon.spring.sm.vo.BoardVO">
+		SELECT  B_NO, B_TITLE, B_ID, B_DATETIME, B_TEXT FROM SL_BOARD_FREE
+		WHERE B_REPLY_ORI = #{b_no}
+	</select>
+	<!-- 댓글 작성 -->
+	<insert id="setComment">
+		INSERT INTO SL_BOARD_FREE (B_CATEGORY, B_ID, B_TEXT, B_REPLY_ORI) 
+		VALUES (#{b_category}, #{b_id}, #{b_text}, #{b_reply_ori})
+	</insert>
+	<!-- 댓글 작성 시 원글의 댓글 수 count 증가 -->
+	<update id="commentCountPlus">
+		UPDATE SL_BOARD_FREE SET B_REPLY_COUNT = B_REPLY_COUNT + 1
+		WHERE B_NO = #{b_reply_ori}
+	</update>
+	<update id="commentCountMinus">
+		UPDATE SL_BOARD_FREE SET B_REPLY_COUNT = B_REPLY_COUNT - 1
+		WHERE B_NO = #{b_reply_ori}
+	</update>
+	<!-- 댓글 관련 -->
 	
 </mapper>

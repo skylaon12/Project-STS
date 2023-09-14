@@ -1,6 +1,7 @@
 package com.skylaon.spring.sm.mapper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -25,8 +26,14 @@ public interface BoardMapper {
 	//search
 	public ArrayList<BoardVO> getSearchList(@Param("word")String word, @Param("b_category") String b_category, @Param("index") int index);
 	
+	// 게시물 클릭 시 조회수 증가
+	public void hitCountPlus(int b_no);
+	
 	public int getTotalCount(String b_category);
 	public int getSearchTotalCount(@Param("word")String word, @Param("b_category") String b_category);
 	
-	
+	public List<BoardVO> getComment(@Param("b_no")int bno);
+	public void setComment(BoardVO gvo);
+	public void commentCountPlus(BoardVO gvo);
+	public void commentCountMinus(int b_reply_ori);
 }

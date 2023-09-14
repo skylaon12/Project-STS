@@ -1,12 +1,18 @@
 package com.skylaon.spring.sm.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.skylaon.spring.sm.board.ConfigBoard;
@@ -181,6 +187,7 @@ public class BoardController {
 		log.info("컨트롤러 ==== 글번호 ===============" + bno);
 		model.addAttribute("category", category);
 		model.addAttribute("read", service.read(bno));
+		model.addAttribute("comment", service.getComment(bno));
 	}
 	
 	@GetMapping("/modify")
@@ -212,5 +219,33 @@ public class BoardController {
 		service.modify(gvo);
 		Alert.alertAndGo(response, "게시물이 수정되었습니다.", "/board/getList?category=" + category);
 	}
+	
+	@RequestMapping(value="/commentProc", method =  RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> commentProc(@RequestBody BoardVO gvo){
+		
+		boolean success = false;
+		String message = "이건 뭔지 몰라";
+		
+		success = service.setComment(gvo);
 
+		Map<String,Object> response = new HashMap<>();
+		
+		response.put("success", success);
+		response.put("message", message);
+		
+		log.info("댓글작성 완료");
+		
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping("/delComment")
+	public void delComment(HttpServletResponse response, @RequestParam("no") int no,
+			@RequestParam("category") String category, @RequestParam("ori")int ori_no) {
+		log.info("넘어온 category : " + category);
+		log.info("넘어온 댓글 no : " + no);
+		log.info("넘어온 원글 no : " + ori_no);
+		service.del(no, ori_no);
+		String url = "/board/read?category=" + category + "&no=" + ori_no;
+		Alert.alertAndGo(response, "게시물이 삭제되었습니다", url);
+	}
 }
